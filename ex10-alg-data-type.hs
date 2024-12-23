@@ -37,3 +37,19 @@ nextDay day month
     | day <= 0 = error "Invalid day"
     | day < daysInMonth month = (day + 1, month)
     | otherwise = (1, nextMonth month)
+
+elem' :: Ord a => a -> [a] -> Bool
+elem' _ [] = False
+elem' x (y:ys)
+    | x == y = True
+    | otherwise = elem' x ys
+
+foldElem :: Ord a => a -> [a] -> Bool
+-- foldElem x list = foldr (\y acc -> x == y || acc) False list
+foldElem x = foldr (\y acc -> x == y || acc) False 
+
+foldPartition :: (a -> Bool) -> [a] -> ([a], [a])
+foldPartition _ [] = ([], [])
+foldPartition pred list = foldr (\l acc -> 
+    if pred l then (l:fst acc, snd acc) 
+    else (fst acc, l:snd acc)) ([], []) list

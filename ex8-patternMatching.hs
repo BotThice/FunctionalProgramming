@@ -2,7 +2,7 @@
 partition :: (a -> Bool) -> [a] -> ([a], [a])
 partition predicate [] = ([], [])
 partition predicate (x:xs)
-  | predicate x       = (x:l, r)
+  | predicate x  = (x:l, r)
   | otherwise = (l, x:r)
   where (l, r) = partition predicate xs
 

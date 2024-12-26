@@ -15,8 +15,15 @@ foldTree  :: (a -> b -> b -> b) -> b -> Tree a -> b
 foldTree _ acc Empty = acc
 foldTree op acc (Node l root r) = op root (foldTree op acc l) (foldTree op acc r)
 
+preOrderNAry :: NAryTree a -> [a]
+preOrderNAry NEmpty = []
+preOrderNAry (NNode root []) = [root]
+preOrderNAry (NNode root children) = root : concatMap preOrderNAry children
 
-
+postOrderNAry :: NAryTree a -> [a]
+postOrderNAry NEmpty = []
+postOrderNAry (NNode root []) = [root]
+postOrderNAry (NNode root children) = concatMap postOrderNAry children ++ [root]
 
 -- isBST :: Tree a -> Bool
 -- isBST Empty = True

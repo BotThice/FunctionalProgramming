@@ -1,0 +1,16 @@
+how should we define equality for binary trees?
+    when are two binary trees equal?
+    -> when 2 binary tree have same structure and same data.
+
+how should we define equality for lists?
+    when are two lists equal?
+    -> when 2 lists have same data and same order.
+
+how should we define equality for pairs?
+    when are two pairs equal?
+    -> when two pairs have same fst and snd
+
+how should we define equality for Maybe?
+    when are two Maybe's equal?
+    -> when both are Nothing or both have same Just value
+    

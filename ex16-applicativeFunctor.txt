@@ -1,0 +1,74 @@
+suppose we want to make (,) r an applicative functor
+that means we need to implement
+(<*>) ::
+  (r, a -> b) -> (r, a) -> (r, b)
+r could be any type, for representing labels
+but now we have two pieces of data containing labels (i.e., (r,a->b) and (r,a))
+how should we implement (<*>) so that the resulting data contain appropriate label?
+  i think we should use snd to split value a and apply it to a -> b then return (r, b) back as a result
+how should we implement pure so that the initial label makes sense?
+  i think we can use r to be the first element of pair and a is the second element of pair.
+
+prove that the four applicative functor laws hold for (->) r applicative functor
+hint: apply each side of the equality to an argument (of type r), and check that both sides are indeed equal
+
+instance Applicative ((->) r) where
+	pure = const (<*>) f g x = f x (g x)
+
+Identity law:
+  pure id <*> v = v, v = (g x)
+    left side:
+      = pure id <*> ((->) r) v
+      = (const id <*> ((->) r)) v
+      = (const id v) (((->) r) v)
+      = id (((->) r) v)
+      = ((->) r) v
+    right side:
+      = ((->) r) v
+  so, pure id <*> v = v
+
+homomorphism law:
+  pure f <*> pure x = pure (f x), x :: a, f :: a -> b
+    left side:
+      (pure f <*> pure x) r
+      = (const f <*> const x) r
+      = (const f r) (const x r)
+      = f (x) -- const f r = f, const x r = x
+    right side:
+      pure (f x) r 
+      = const (f x) r 
+      = f x -- const (f x) r = (f x)
+
+composition law:
+  pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+  u :: r -> (b -> c)
+  v :: r -> (a -> b)
+  w :: r -> a
+    left side:
+      ((pure (.)) <*> u <*> v <*> w) x
+      = ((const (.) <*> u) <*> v <*> w) x
+      = ( ((const (.) <*> u) x) (v <*> w) x )
+      = ( (.) (u x)  ( v <*> w) x)
+      = ( (.) (u x) ( v x (w x)))
+      = ( (u x) . ( v x (w x)))
+      = ( u x ( v x ( w x )))
+    right side:
+      (u <*> (v <*> w)) x
+      = (u x) ((v <*> w) x)
+      = (u x) (v x (w x))
+      = (u x (v x (w x)))
+
+Interchange law:
+  u <*> pure y = pure ($ y) <*> u
+  u :: ((->) r) (a -> b) so, u :: r -> (a -> b)
+  y :: a
+  ($ y) :: (a -> b) -> b
+    left side:
+      (u <*> pure y) r
+      = (u <*> const y) r                    
+      = (u r) ((const y) r)                
+      = (u r) (y)                      
+    right side:
+      (pure ($ y) <*> u) r
+      = (const ($ y) <*> u) r 
+      = (const ($ y) r) (u r)

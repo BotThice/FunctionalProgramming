@@ -47,18 +47,6 @@ allCourse = [ (Course' 261409 20 [650610762]), (Course' 261408 21 []), (Course' 
 
 -- fixed bug version
 
-enroll''' :: CourseInfo' -> StudentID ->
-        Either String CourseInfo'
-enroll''' c sid
-  | sid `elem` rs =
-      Left "student already registered"
-  | length rs >= seats =
-      Left "course full"
-  | otherwise = Right $
-      Course' (cid c) seats (sid:rs)
-  where seats = cap c
-        rs = roster c
-
 register''' :: [CourseInfo']
     -> CourseID -> StudentID
     -> Either String [CourseInfo']
@@ -67,7 +55,7 @@ register''' cs cid' sid = register_aux cs cid' sid []
     where 
         register_aux (c:cs) cid' sid prev
             | cid c == cid' =
-                case enroll''' c sid of
+                case enroll'' c sid of
                     Left msg -> Left msg
                     Right c' -> Right (prev ++ (c' : cs)) 
             | otherwise = register_aux cs cid' sid (c:prev)
